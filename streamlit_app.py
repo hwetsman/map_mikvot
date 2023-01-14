@@ -1,12 +1,6 @@
-import matplotlib.animation as ani
-import numpy as np
+
 import matplotlib.pyplot as plt
-import matplotlib.animation as ani
-import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
-from iso3166 import countries
-import matplotlib.image as mpimg
 import streamlit as st
 
 
