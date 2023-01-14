@@ -29,7 +29,8 @@ for i, r in data.iterrows():
     lat = data.loc[i, 'lat']
     long = data.loc[i, 'lon']
     name = data.loc[i, 'name']
-    marker = folium.Marker([lat, long], popup=name).add_to(m)
+    # marker = folium.Marker([lat, long], popup=name).add_to(m)
+    marker = folium.CircleMarker(location=[lat, long], popup=name, color='red', radius=1).add_to(m)
 
     # Add hover text to the marker
     # hover = folium.Html(f'<b>{name}</b>', script=True)
