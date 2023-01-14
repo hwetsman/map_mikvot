@@ -22,7 +22,7 @@ data = data[data['year'] <= year]
 # st.map(data=data, zoom=zlevel, use_container_width=True)
 
 
-m = folium.Map(location=[31.7857, 35.2007], zoom_start=zlevel)
+m = folium.Map(location=[31.7857, 35.2007], zoom_start=zlevel, tiles='Stamen Watercolor')
 
 # Add a marker to the map
 for i, r in data.iterrows():
