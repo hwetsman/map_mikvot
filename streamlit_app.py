@@ -15,7 +15,7 @@ data = pd.DataFrame({'lat': [29.95, 29.9, 30.0, 29.97], 'lon': [-90.0, -
                     'year': [-130, -125, -25, 25]})
 lines = data.shape[0]
 print(data)
-zlevel = st.sidebar.slider('Choose level of zoom', min_value=0, max_value=10, value=7)
+zlevel = st.sidebar.slider('Choose level of zoom', min_value=0, max_value=10, value=10)
 year = st.sidebar.slider('Choose year to view', min_value=-250, max_value=150, value=0)
 data = data[data['year'] <= year]
 # st.map(data=data, zoom=zlevel, use_container_width=True)
@@ -28,7 +28,7 @@ for i, r in data.iterrows():
     lat = data.loc[i, 'lat']
     long = data.loc[i, 'lon']
     name = data.loc[i, 'name']
-    folium.Marker([lat, long], popup=name).add_to(m)
+    marker = folium.Marker([lat, long], popup=name).add_to(m)
 
     # Add hover text to the marker
     # hover = folium.Html(f'<b>{name}</b>', script=True)
