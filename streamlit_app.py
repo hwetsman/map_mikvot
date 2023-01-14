@@ -10,18 +10,19 @@ from streamlit_folium import st_folium
 
 # url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv'
 # data = pd.read_csv('map_data.csv')
-data = pd.DataFrame({'lat': [29.95, 29.9, 30.0, 29.97], 'lon': [-90.0, -
-                    89.96, -90.1, -90.05], 'name': ['mikvah1', 'mikvah2', 'mikvah3', 'mikvah4'],
-                    'year': [-130, -125, -25, 25]})
+data = pd.DataFrame({'lat': [31.7857, 31.9, 32.2, 31.6],
+                     'lon': [35.2007, 35.1007, 35.15, 35.2],
+                     'name': ['mikvah1', 'mikvah2', 'mikvah3', 'mikvah4'],
+                     'year': [-130, -125, -25, 25]})
 lines = data.shape[0]
 print(data)
-zlevel = st.sidebar.slider('Choose level of zoom', min_value=0, max_value=10, value=10)
+zlevel = st.sidebar.slider('Choose level of zoom', min_value=0, max_value=10, value=8)
 year = st.sidebar.slider('Choose year to view', min_value=-250, max_value=150, value=0)
 data = data[data['year'] <= year]
 # st.map(data=data, zoom=zlevel, use_container_width=True)
 
 
-m = folium.Map(location=[30, -90], zoom_start=zlevel)
+m = folium.Map(location=[31.7857, 35.2007], zoom_start=zlevel)
 
 # Add a marker to the map
 for i, r in data.iterrows():
