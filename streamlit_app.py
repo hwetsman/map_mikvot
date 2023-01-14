@@ -2,6 +2,7 @@
 
 import pandas as pd
 import streamlit as st
+import folium
 
 
 # pays = countries.get('USA').alpha2.lower()
