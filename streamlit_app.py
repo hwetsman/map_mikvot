@@ -3,6 +3,7 @@
 import pandas as pd
 import streamlit as st
 import folium
+from streamlit_folium import st_folium
 
 
 # pays = countries.get('USA').alpha2.lower()
@@ -17,7 +18,29 @@ print(data)
 zlevel = st.sidebar.slider('Choose level of zoom', min_value=0, max_value=10, value=7)
 year = st.sidebar.slider('Choose year to view', min_value=-250, max_value=150, value=0)
 data = data[data['year'] <= year]
-st.map(data=data, zoom=zlevel, use_container_width=True)
+# st.map(data=data, zoom=zlevel, use_container_width=True)
+
+
+m = folium.Map(location=[30, -90], zoom_start=zlevel)
+
+# Add a marker to the map
+for i, r in data.iterrows():
+    lat = data.loc[i, 'lat']
+    long = data.loc[i, 'lon']
+    name = data.loc[i, 'name']
+    folium.Marker([lat, long], popup=name).add_to(m)
+
+    # Add hover text to the marker
+    # hover = folium.Html(f'<b>{name}</b>', script=True)
+    # st.write(hover)
+    # marker.add_child(hover)
+    # st.write(marker)
+    # marker.add_to(m)
+    # st.write(m)
+# st.pydeck_chart(m._repr_html_())
+st_data = st_folium(m)
+# st.write(m)
+
 
 # data['Year'] = pd.to_datetime(data['Year'], format='%Y')
 # data.set_index('Year', inplace=True)
