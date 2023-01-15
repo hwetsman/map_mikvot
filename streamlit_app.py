@@ -14,10 +14,7 @@ data = pd.read_csv('map_data.csv')
 st.write(data.head())
 era_dict = {'Hellenistic': -100, 'Early Roman 1': -50, 'Early Roman 2': 70,
             'Middle Roman': 135, 'Late Roman': 250, 'Byzantine': 350, 'Islamic': 650}
-# data = pd.DataFrame({'lat': [31.7857, 31.9, 32.2, 31.6],
-#                      'lon': [35.2007, 35.1007, 35.15, 35.2],
-#                      'name': ['mikvah1', 'mikvah2', 'mikvah3', 'mikvah4'],
-#                      'year': [-130, -125, -25, 25]})
+
 # lines = data.shape[0]
 # get user inputs
 undated = st.sidebar.radio('Include undated mikvaot?', ['Yes', 'No'])
@@ -62,8 +59,8 @@ m = folium.Map(location=[31.7857, 35.2007], zoom_start=zlevel, tiles='Stamen Wat
 # Add a marker to the map
 for i, r in data.iterrows():
     lat = data.loc[i, 'lat']
-    long = data.loc[i, 'lon']
-    name = data.loc[i, 'name']
+    long = data.loc[i, 'long']
+    name = data.loc[i, 'num']
     # marker = folium.Marker([lat, long], popup=name).add_to(m)
     marker = folium.CircleMarker(location=[lat, long], popup=name, color='red', radius=1).add_to(m)
 
