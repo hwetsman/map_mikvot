@@ -10,9 +10,9 @@ from streamlit_folium import st_folium
 
 
 # pays = countries.get('USA').alpha2.lower()
-# st.set_page_config(layout="wide")
+st.set_page_config(layout="wide")
 col1, col2 = st.columns(2)
-instructions = """ """
+instructions = """Instructions for using this site:\nFrom the sidebar, choose the level of zoom, the era to map, and whether or not you would like to include undated mikvot."""
 col2.write(instructions)
 # url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv'
 data = pd.read_csv('map_data.csv')
@@ -55,28 +55,34 @@ undated_df = data[data['Earliest'].isnull()]
 # data = data[data['year'] <= year]
 if era == 'Byzantine':
     df = data[data['Earliest'].isin([x for x in list(era_dict.keys()) if x not in ['Islamic']])]
+    col2.write('\nThe Byzantine period dates from years 350 to 650 of the common era.')
     # st.write(df.shape)
 elif era == 'Late Roman':
     df = data[data['Earliest'].isin([x for x in list(era_dict.keys()) if x not in [
         'Islamic', 'Byzantine']])]
+    col2.write('\nThe Late Roman period dates from years 250 to 350 of the common era.')
     # st.write(df.shape)
 elif era == 'Middle Roman':
     df = data[data['Earliest'].isin([x for x in list(era_dict.keys()) if x not in [
         'Islamic', 'Byzantine', 'Late Roman']])]
+    col2.write('\nThe Middle Roman period dates from years 135 to 250 of the common era.')
     # st.write(df.shape)
 elif era == 'Early Roman 2':
     df = data[data['Earliest'].isin([x for x in list(era_dict.keys()) if x not in
                                      ['Islamic', 'Byzantine', 'Late Roman', 'Middle Roman']])]
+    col2.write('\nThe second half of the Early Roman period dates from destruction of the Temple in year 70 to year 135 of the common era.')
     # st.write(df.shape)
 elif era == 'Early Roman 1':
     df = data[data['Earliest'].isin([x for x in list(era_dict.keys()) if x not in
                                      ['Islamic', 'Byzantine', 'Late Roman', 'Middle Roman', 'Early Roman 2']])]
-    # st.write(df.shape)
+    col2.write('\nThe first half of the Early Roman period dates from 50 years befor the common era to the destruction of the Temple in the year 70 of the common era.')
 elif era == 'Hellenistic':
     df = data[data['Earliest'].isin([x for x in list(era_dict.keys()) if x not in
                                      ['Islamic', 'Byzantine', 'Late Roman', 'Middle Roman', 'Early Roman 2', 'Early Roman 1']])]
+    col2.write('\nThe Hellenistic period dates from years 100 to 50 before the common era.')
 else:
     df = data[~data['Earliest'].isnull()]
+    col2.write('\nThe Islamic period is after year 650 of the common era.')
 
 # else:
 #     df = data.copy()
