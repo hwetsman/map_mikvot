@@ -12,7 +12,8 @@ from streamlit_folium import st_folium
 # pays = countries.get('USA').alpha2.lower()
 st.set_page_config(layout="wide")
 col1, col2 = st.columns(2)
-instructions = """Instructions for using this site:\nFrom the sidebar, choose the level of zoom, the era to map, and whether or not you would like to include undated mikvot."""
+col2.write('Instructions for using this site:')
+instructions = """\nFrom the sidebar, choose the level of zoom, the era to map, and whether or not you would like to include undated mikvot."""
 col2.write(instructions)
 # url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv'
 data = pd.read_csv('map_data.csv')
@@ -22,7 +23,7 @@ data['latitude'] = data.lat*100
 data.drop(['long', 'lat'], inplace=True, axis=1)
 data.rename(columns={'latitude': 'lat', 'longitude': 'long'}, inplace=True)
 # st.write(data.head())
-era_dict = {'Hellenistic': -100, 'Early Roman 1': -50, 'Early Roman 2': 70,
+era_dict = {'Persian': -540, 'Hellenistic': -330, 'Early Roman 1': -50, 'Early Roman 2': 70,
             'Middle Roman': 135, 'Late Roman': 250, 'Byzantine': 350, 'Islamic': 650}
 
 
@@ -80,6 +81,10 @@ elif era == 'Hellenistic':
     df = data[data['Earliest'].isin([x for x in list(era_dict.keys()) if x not in
                                      ['Islamic', 'Byzantine', 'Late Roman', 'Middle Roman', 'Early Roman 2', 'Early Roman 1']])]
     col2.write('\nThe Hellenistic period dates from years 100 to 50 before the common era.')
+elif era == 'Persian':
+    df = data[data['Earliest'].isin([x for x in list(era_dict.keys()) if x not in [
+                                    'Islamic', 'Byzantine', 'Late Roman', 'Middle Roman', 'Early Roman 2', 'Early Roman 1', 'Hellenistic']])]
+    col2.write('\nThe Persian period dates from about year 540 to year 100 before the common era. There are no mikvot dated to this period.')
 else:
     df = data[~data['Earliest'].isnull()]
     col2.write('\nThe Islamic period is after year 650 of the common era.')
