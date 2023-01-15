@@ -13,12 +13,12 @@ from streamlit_folium import st_folium
 st.set_page_config(layout="wide")
 # url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv'
 data = pd.read_csv('map_data.csv')
-st.write(data)
+# st.write(data)
 data['longitude'] = data.long*100
 data['latitude'] = data.lat*100
 data.drop(['long', 'lat'], inplace=True, axis=1)
 data.rename(columns={'latitude': 'lat', 'longitude': 'long'}, inplace=True)
-st.write(data.head())
+# st.write(data.head())
 era_dict = {'Hellenistic': -100, 'Early Roman 1': -50, 'Early Roman 2': 70,
             'Middle Roman': 135, 'Late Roman': 250, 'Byzantine': 350, 'Islamic': 650}
 
@@ -37,7 +37,8 @@ for i, r in data.iterrows():
     # st.write(transformer.transform(220080, 634451))
 data.rename(columns={'lat': 'old_lat', 'long': 'old_long'}, inplace=True)
 data.rename(columns={'latitude': 'lat', 'longitude': 'long'}, inplace=True)
-st.write(data)
+# st.write(data)
+
 # lines = data.shape[0]
 # get user inputs
 undated = st.sidebar.radio('Include undated mikvaot?', ['Yes', 'No'])
@@ -47,6 +48,7 @@ era = st.select_slider('Choose an Era', list(era_dict.keys()))
 st.title(era)
 
 undated_df = data[data['Earliest'].isnull()]
+# st.write(undated_df.shape)
 # data = data[data['year'] <= year]
 if era == 'Byzantine':
     df = data[data['Earliest'].isin([x for x in list(era_dict.keys()) if x not in ['Islamic']])]
@@ -70,11 +72,14 @@ elif era == 'Early Roman 1':
 elif era == 'Hellenistic':
     df = data[data['Earliest'].isin([x for x in list(era_dict.keys()) if x not in
                                      ['Islamic', 'Byzantine', 'Late Roman', 'Middle Roman', 'Early Roman 2', 'Early Roman 1']])]
-    # st.write(df.shape)
 else:
-    df = data.copy()
+    df = data[~data['Earliest'].isnull()]
+
+# else:
+#     df = data.copy()
 if undated == 'Yes':
     df = df.append(undated_df)
+# st.write(df.shape)
 
 
 m = folium.Map(location=[31.7857, 35.2007], zoom_start=zlevel,
@@ -86,6 +91,10 @@ for i, r in df.iterrows():
     long = df.loc[i, 'long']
     name = df.loc[i, 'num']
     # marker = folium.Marker([lat, long], popup=name).add_to(m)
+    # st.write(i)
+    # st.write(f'latitude: {lat}')
+    # st.write(f'long: {long}')
+    # st.write(f'name: {name}')
     marker = folium.CircleMarker(location=[lat, long], popup=name, color='red', radius=1).add_to(m)
 
     # Add hover text to the marker
