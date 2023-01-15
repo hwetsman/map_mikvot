@@ -10,23 +10,51 @@ from streamlit_folium import st_folium
 st.set_page_config(layout="wide")
 # url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv'
 data = pd.read_csv('map_data.csv')
+
 st.write(data.head())
-era_dict = {'Hellenistic': -100, 'Early Roman I': -50, 'Early Roman II': 70,
+era_dict = {'Hellenistic': -100, 'Early Roman 1': -50, 'Early Roman 2': 70,
             'Middle Roman': 135, 'Late Roman': 250, 'Byzantine': 350, 'Islamic': 650}
 # data = pd.DataFrame({'lat': [31.7857, 31.9, 32.2, 31.6],
 #                      'lon': [35.2007, 35.1007, 35.15, 35.2],
 #                      'name': ['mikvah1', 'mikvah2', 'mikvah3', 'mikvah4'],
 #                      'year': [-130, -125, -25, 25]})
 # lines = data.shape[0]
-# print(data)
+# get user inputs
 undated = st.sidebar.radio('Include undated mikvaot?', ['Yes', 'No'])
 zlevel = st.sidebar.slider('Choose level of zoom', min_value=0, max_value=10, value=8)
-# year = st.slider('Choose a year relative to CE', min_value=-100, max_value=650, value=0)
 era = st.select_slider('Choose an Era', list(era_dict.keys()))
 
 st.title(era)
-data = data[data['year'] <= year]
-# st.map(data=data, zoom=zlevel, use_container_width=True)
+
+undated_df = data[data['Earliest'].isnull()]
+# data = data[data['year'] <= year]
+if era == 'Byzantine':
+    df = data[data['Earliest'].isin([x for x in list(era_dict.keys()) if x not in ['Islamic']])]
+    # st.write(df.shape)
+elif era == 'Late Roman':
+    df = data[data['Earliest'].isin([x for x in list(era_dict.keys()) if x not in [
+        'Islamic', 'Byzantine']])]
+    # st.write(df.shape)
+elif era == 'Middle Roman':
+    df = data[data['Earliest'].isin([x for x in list(era_dict.keys()) if x not in [
+        'Islamic', 'Byzantine', 'Late Roman']])]
+    # st.write(df.shape)
+elif era == 'Early Roman 2':
+    df = data[data['Earliest'].isin([x for x in list(era_dict.keys()) if x not in
+                                     ['Islamic', 'Byzantine', 'Late Roman', 'Middle Roman']])]
+    # st.write(df.shape)
+elif era == 'Early Roman 1':
+    df = data[data['Earliest'].isin([x for x in list(era_dict.keys()) if x not in
+                                     ['Islamic', 'Byzantine', 'Late Roman', 'Middle Roman', 'Early Roman 2']])]
+    # st.write(df.shape)
+elif era == 'Hellenistic':
+    df = data[data['Earliest'].isin([x for x in list(era_dict.keys()) if x not in
+                                     ['Islamic', 'Byzantine', 'Late Roman', 'Middle Roman', 'Early Roman 2', 'Early Roman 1']])]
+    # st.write(df.shape)
+else:
+    df = data.copy()
+if undated == 'Yes':
+    df = df.append(undated_df)
 
 
 m = folium.Map(location=[31.7857, 35.2007], zoom_start=zlevel, tiles='Stamen Watercolor')
