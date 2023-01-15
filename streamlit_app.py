@@ -7,7 +7,7 @@ from streamlit_folium import st_folium
 
 
 # pays = countries.get('USA').alpha2.lower()
-
+st.set_page_config(layout="wide")
 # url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv'
 data = pd.read_csv('map_data.csv')
 st.write(data)
