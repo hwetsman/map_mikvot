@@ -21,7 +21,7 @@ era_dict = {'Hellenistic': -100, 'Early Roman I': -50, 'Early Roman II': 70,
 # print(data)
 undated = st.sidebar.radio('Include undated mikvaot?', ['Yes', 'No'])
 zlevel = st.sidebar.slider('Choose level of zoom', min_value=0, max_value=10, value=8)
-year = st.sidebar.slider('Choose year to view', min_value=-250, max_value=150, value=0)
+year = st.slider('Choose year to view', min_value=-250, max_value=150, value=0)
 data = data[data['year'] <= year]
 # st.map(data=data, zoom=zlevel, use_container_width=True)
 
