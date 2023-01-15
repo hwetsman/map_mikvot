@@ -10,6 +10,8 @@ from streamlit_folium import st_folium
 
 # url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv'
 # data = pd.read_csv('map_data.csv')
+era_dict = {'Hellenistic': -100, 'Early Roman I': -50, 'Early Roman II': 70,
+            'Middle Roman': 135, 'Late Roman': 250, 'Byzentine': 350, 'Islamic': 650}
 data = pd.DataFrame({'lat': [31.7857, 31.9, 32.2, 31.6],
                      'lon': [35.2007, 35.1007, 35.15, 35.2],
                      'name': ['mikvah1', 'mikvah2', 'mikvah3', 'mikvah4'],
