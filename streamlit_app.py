@@ -1,5 +1,8 @@
 
 
+from pyproj import Transformer
+from pyproj import CRS
+import pyproj
 import pandas as pd
 import streamlit as st
 import folium
@@ -10,11 +13,31 @@ from streamlit_folium import st_folium
 st.set_page_config(layout="wide")
 # url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv'
 data = pd.read_csv('map_data.csv')
-
+st.write(data)
+data['longitude'] = data.long*100
+data['latitude'] = data.lat*100
+data.drop(['long', 'lat'], inplace=True, axis=1)
+data.rename(columns={'latitude': 'lat', 'longitude': 'long'}, inplace=True)
 st.write(data.head())
 era_dict = {'Hellenistic': -100, 'Early Roman 1': -50, 'Early Roman 2': 70,
             'Middle Roman': 135, 'Late Roman': 250, 'Byzantine': 350, 'Islamic': 650}
 
+
+# crs = CRS.from_epsg(6991)
+# crs.to_epsg()
+# crs = CRS.from_proj4("+proj=tmerc +lat_0=31.7343936111111 +lon_0=35.2045169444445 +k=1.0000067 +x_0=219529.584 +y_0=626907.39 +ellps=GRS80 +towgs84=-24.002400,-17.103200,-17.844400,-0.33007,-1.852690,1.669690,5.424800 +units=m +no_defs")
+
+transformer = Transformer.from_crs("EPSG:6991", "EPSG:4326")
+for i, r in data.iterrows():
+    long = data.loc[i, 'long']
+    lat = data.loc[i, 'lat']
+    latitude, longitude = transformer.transform(long, lat)
+    data.loc[i, 'longitude'] = longitude+.52
+    data.loc[i, 'latitude'] = latitude+4.51
+    # st.write(transformer.transform(220080, 634451))
+data.rename(columns={'lat': 'old_lat', 'long': 'old_long'}, inplace=True)
+data.rename(columns={'latitude': 'lat', 'longitude': 'long'}, inplace=True)
+st.write(data)
 # lines = data.shape[0]
 # get user inputs
 undated = st.sidebar.radio('Include undated mikvaot?', ['Yes', 'No'])
@@ -54,13 +77,14 @@ if undated == 'Yes':
     df = df.append(undated_df)
 
 
-m = folium.Map(location=[31.7857, 35.2007], zoom_start=zlevel, tiles='Stamen Watercolor')
+m = folium.Map(location=[31.7857, 35.2007], zoom_start=zlevel,
+               tiles='cartodb positron')  # tiles='Stamen Watercolor')
 
 # Add a marker to the map
-for i, r in data.iterrows():
-    lat = data.loc[i, 'lat']
-    long = data.loc[i, 'long']
-    name = data.loc[i, 'num']
+for i, r in df.iterrows():
+    lat = df.loc[i, 'lat']
+    long = df.loc[i, 'long']
+    name = df.loc[i, 'num']
     # marker = folium.Marker([lat, long], popup=name).add_to(m)
     marker = folium.CircleMarker(location=[lat, long], popup=name, color='red', radius=1).add_to(m)
 
