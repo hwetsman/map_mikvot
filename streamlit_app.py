@@ -10,7 +10,7 @@ from streamlit_folium import st_folium
 st.set_page_config(layout="wide")
 # url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv'
 data = pd.read_csv('map_data.csv')
-st.write(data)
+st.write(data.head())
 era_dict = {'Hellenistic': -100, 'Early Roman I': -50, 'Early Roman II': 70,
             'Middle Roman': 135, 'Late Roman': 250, 'Byzentine': 350, 'Islamic': 650}
 # data = pd.DataFrame({'lat': [31.7857, 31.9, 32.2, 31.6],
@@ -21,7 +21,22 @@ era_dict = {'Hellenistic': -100, 'Early Roman I': -50, 'Early Roman II': 70,
 # print(data)
 undated = st.sidebar.radio('Include undated mikvaot?', ['Yes', 'No'])
 zlevel = st.sidebar.slider('Choose level of zoom', min_value=0, max_value=10, value=8)
-year = st.slider('Choose year to view', min_value=-250, max_value=150, value=0)
+year = st.slider('Choose a year relative to CE', min_value=-100, max_value=650, value=0)
+if year < -50:
+    era = 'Hellenistic'
+elif year < 70:
+    era = 'Early Roman 1'
+elif year < 135:
+    era = 'Early Roman 2'
+elif year < 250:
+    era = 'Middle Roman'
+elif year < 350:
+    era = 'Late Roman'
+elif year < 650:
+    era = 'Byzantine'
+else:
+    era = 'Islamic'
+st.title(era)
 data = data[data['year'] <= year]
 # st.map(data=data, zoom=zlevel, use_container_width=True)
 
