@@ -5,3 +5,4 @@ scipy==1.9.0
 plotly
 folium
 streamlit-folium
+pyproj
