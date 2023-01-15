@@ -49,7 +49,7 @@ undated = st.sidebar.radio('Include undated mikvot?', ['No', 'Yes'])
 zlevel = st.sidebar.slider('Choose level of zoom', min_value=0, max_value=10, value=8)
 era = st.sidebar.select_slider('Choose an Era', list(era_dict.keys()))
 
-col1.title(era)
+# col1.title(era)
 
 undated_df = data[data['Earliest'].isnull()]
 # st.write(undated_df.shape)
