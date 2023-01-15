@@ -10,7 +10,10 @@ from streamlit_folium import st_folium
 
 
 # pays = countries.get('USA').alpha2.lower()
-st.set_page_config(layout="wide")
+# st.set_page_config(layout="wide")
+col1, col2 = st.columns(2)
+instructions = """ """
+col2.write(instructions)
 # url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv'
 data = pd.read_csv('map_data.csv')
 # st.write(data)
@@ -41,11 +44,11 @@ data.rename(columns={'latitude': 'lat', 'longitude': 'long'}, inplace=True)
 
 # lines = data.shape[0]
 # get user inputs
-undated = st.sidebar.radio('Include undated mikvaot?', ['Yes', 'No'])
+undated = st.sidebar.radio('Include undated mikvot?', ['Yes', 'No'])
 zlevel = st.sidebar.slider('Choose level of zoom', min_value=0, max_value=10, value=8)
-era = st.select_slider('Choose an Era', list(era_dict.keys()))
+era = st.sidebar.select_slider('Choose an Era', list(era_dict.keys()))
 
-st.title(era)
+col1.title(era)
 
 undated_df = data[data['Earliest'].isnull()]
 # st.write(undated_df.shape)
@@ -90,22 +93,11 @@ for i, r in df.iterrows():
     lat = df.loc[i, 'lat']
     long = df.loc[i, 'long']
     name = df.loc[i, 'num']
-    # marker = folium.Marker([lat, long], popup=name).add_to(m)
-    # st.write(i)
-    # st.write(f'latitude: {lat}')
-    # st.write(f'long: {long}')
-    # st.write(f'name: {name}')
     marker = folium.CircleMarker(location=[lat, long], popup=name, color='red', radius=1).add_to(m)
 
-    # Add hover text to the marker
-    # hover = folium.Html(f'<b>{name}</b>', script=True)
-    # st.write(hover)
-    # marker.add_child(hover)
-    # st.write(marker)
-    # marker.add_to(m)
-    # st.write(m)
-# st.pydeck_chart(m._repr_html_())
-st_data = st_folium(m)
+with col1:
+    st_data = st_folium(m)
+
 # st.write(m)
 
 
