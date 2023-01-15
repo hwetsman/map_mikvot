@@ -12,9 +12,9 @@ from streamlit_folium import st_folium
 # pays = countries.get('USA').alpha2.lower()
 st.set_page_config(layout="wide")
 col1, col2 = st.columns(2)
-col2.write('Instructions for using this site:')
-instructions = """\nFrom the sidebar, choose the level of zoom, the era to map, and whether or not you would like to include undated mikvot."""
-col2.write(instructions)
+st.sidebar.write('Instructions for using this site:')
+instructions = """\nFrom this sidebar, choose the level of zoom, the era to map, and whether or not you would like to include undated mikvot."""
+st.sidebar.write(instructions)
 # url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv'
 data = pd.read_csv('map_data.csv')
 # st.write(data)
@@ -48,7 +48,7 @@ data.rename(columns={'latitude': 'lat', 'longitude': 'long'}, inplace=True)
 undated = st.sidebar.radio('Include undated mikvot?', ['No', 'Yes'])
 zlevel = st.sidebar.slider('Choose level of zoom', min_value=0, max_value=10, value=8)
 era = st.sidebar.select_slider('Choose an Era', list(era_dict.keys()))
-
+st.sidebar.write('\nData from Dr Yonatan Adler, Ariel University, Israel')
 # col1.title(era)
 
 undated_df = data[data['Earliest'].isnull()]
