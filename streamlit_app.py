@@ -45,7 +45,7 @@ data.rename(columns={'latitude': 'lat', 'longitude': 'long'}, inplace=True)
 
 # lines = data.shape[0]
 # get user inputs
-undated = st.sidebar.radio('Include undated mikvot?', ['Yes', 'No'])
+undated = st.sidebar.radio('Include undated mikvot?', ['No', 'Yes'])
 zlevel = st.sidebar.slider('Choose level of zoom', min_value=0, max_value=10, value=8)
 era = st.sidebar.select_slider('Choose an Era', list(era_dict.keys()))
 
