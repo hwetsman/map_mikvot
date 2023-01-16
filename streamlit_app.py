@@ -23,15 +23,11 @@ transformer = Transformer.from_crs("EPSG:6991", "EPSG:4326")
 israel_long_fudge = .52
 israel_lat_fudge = 4.51
 
-
+# get data
 new_data = pd.read_csv('new_map_data.csv')
-new_era_dict = {'P': -540, 'Hel': -330, 'ER I': -50, 'ER II': 70,
-                'MR': 135, 'LR': 250, 'Byz': 350, 'Islm': 650}
 new_data.rename(columns={'Map Ref. Point (Long.)': 'long',
                 'Map Ref. Point (Lat.)': 'lat',
                          'No.': 'num'}, inplace=True)
-
-# st.write(new_data)
 
 
 st.sidebar.write('Instructions for using this site:')
