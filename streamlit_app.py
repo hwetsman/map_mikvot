@@ -9,9 +9,18 @@ import folium
 from streamlit_folium import st_folium
 
 
-# pays = countries.get('USA').alpha2.lower()
+def Get_Lat_Long(x, y):
+    lat, long = transformer.transform(x, y)
+    return lat, long
+
+
+# set streamlit options
 st.set_page_config(layout="wide")
 col1, col2 = st.columns(2)
+
+# set israel grid to lat/long fudge factors
+israel_long_fudge = .52
+israel_lat_fudge = 4.51
 
 new_data = pd.read_csv('new_map_data.csv')
 new_era_dict = {'P': -540, 'Hel': -330, 'ER I': -50, 'ER II': 70,
@@ -43,22 +52,16 @@ era_dict = {'Persian': -540, 'Hellenistic': -330, 'Early Roman 1': -50, 'Early R
 # crs = CRS.from_epsg(6991)
 # crs.to_epsg()
 # crs = CRS.from_proj4("+proj=tmerc +lat_0=31.7343936111111 +lon_0=35.2045169444445 +k=1.0000067 +x_0=219529.584 +y_0=626907.39 +ellps=GRS80 +towgs84=-24.002400,-17.103200,-17.844400,-0.33007,-1.852690,1.669690,5.424800 +units=m +no_defs")
-def Get_Lat_Long(x, y):
-    lat, long = transformer.transform(x, y)
-    return lat, long
 
 
 transformer = Transformer.from_crs("EPSG:6991", "EPSG:4326")
 for i, r in data.iterrows():
-    # long = data.loc[i, 'long']
     x = data.loc[i, 'long']
-    # lat = data.loc[i, 'lat']
     y = data.loc[i, 'lat']
-    # latitude, longitude = transformer.transform(long, lat)
     latitude, longitude = Get_Lat_Long(x, y)
-    data.loc[i, 'longitude'] = longitude+.52
-    data.loc[i, 'latitude'] = latitude+4.51
-    # st.write(transformer.transform(220080, 634451))
+    data.loc[i, 'longitude'] = longitude + israel_long_fudge
+    data.loc[i, 'latitude'] = latitude + israel_lat_fudge
+
 data.rename(columns={'lat': 'old_lat', 'long': 'old_long'}, inplace=True)
 data.rename(columns={'latitude': 'lat', 'longitude': 'long'}, inplace=True)
 # st.write(data)
