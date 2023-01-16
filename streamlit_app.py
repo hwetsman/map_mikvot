@@ -20,7 +20,7 @@ new_data.rename(columns={'Map Ref. Point (Long.)': 'long',
                 'Map Ref. Point (Lat.)': 'lat',
                          'No.': 'num'}, inplace=True)
 
-st.write(new_data)
+# st.write(new_data)
 
 
 st.sidebar.write('Instructions for using this site:')
@@ -29,7 +29,7 @@ st.sidebar.write(instructions)
 # url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv'
 data = pd.read_csv('map_data.csv')
 data = new_data.copy()
-st.write(data)
+# st.write(data)
 data['longitude'] = data.long*100
 data['latitude'] = data.lat*100
 data.drop(['long', 'lat'], inplace=True, axis=1)
@@ -69,31 +69,39 @@ undated_df = data[data['Period'].isnull()]
 # data = data[data['year'] <= year]
 if era == 'Byzantine':
     df = data[data['Byz'] == 1]
+    col2.title('The Byzantine Period')
     col2.write('\nThe Byzantine period dates from years 350 to 650 of the common era.')
     # st.write(df.shape)
 elif era == 'Late Roman':
     df = data[data['LR'] == 1]
+    col2.title('The Late Roman Period')
     col2.write('\nThe Late Roman period dates from years 250 to 350 of the common era.')
     # st.write(df.shape)
 elif era == 'Middle Roman':
     df = data[data['MR'] == 1]
+    col2.title('The Middle Roman Period')
     col2.write('\nThe Middle Roman period dates from years 135 to 250 of the common era.')
     # st.write(df.shape)
 elif era == 'Early Roman 2':
     df = data[data['ER II'] == 1]
+    col2.title('The Early Roman Period 2')
     col2.write('\nThe second half of the Early Roman period dates from destruction of the Temple in year 70 to year 135 of the common era.')
     # st.write(df.shape)
 elif era == 'Early Roman 1':
     df = data[data['ER I'] == 1]
+    col2.title('The Early Roman Period 1')
     col2.write('\nThe first half of the Early Roman period dates from 50 years befor the common era to the destruction of the Temple in the year 70 of the common era.')
 elif era == 'Hellenistic':
+    col2.title('The Hellenistic Period')
     df = data[data['Hel'] == 1]
     col2.write('\nThe Hellenistic period dates from years 100 to 50 before the common era.')
 elif era == 'Persian':
+    col2.title('The Persian Period')
     df = data[data['Persian'] == 1]
     col2.write('\nThe Persian period dates from about year 540 to year 100 before the common era. There are no mikvot dated to this period.')
 else:
     df = data[data['Islm'] == 1]
+    col2.title('The Islamic Period')
     col2.write('\nThe Islamic period is after year 650 of the common era.')
 
 # else:
