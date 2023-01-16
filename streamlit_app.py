@@ -28,18 +28,19 @@ data = pd.read_csv('new_map_data.csv')
 data.rename(columns={'Map Ref. Point (Long.)': 'long',
                      'Map Ref. Point (Lat.)': 'lat',
                      'No.': 'num'}, inplace=True)
+data['Persian'] = 0
 
 # create sidebar instructions
 st.sidebar.write('Instructions for using this site:')
 instructions = """\nFrom this sidebar, choose the level of zoom, the era to map, and whether or not you would like to include undated mikvot."""
 st.sidebar.write(instructions)
 
-
+# create good OIG coordinates
 data['longitude'] = data.long*100
 data['latitude'] = data.lat*100
 data.drop(['long', 'lat'], inplace=True, axis=1)
 data.rename(columns={'latitude': 'lat', 'longitude': 'long'}, inplace=True)
-data['Persian'] = 0
+
 # st.write(data.head())
 era_dict = {'Persian': -540, 'Hellenistic': -330, 'Early Roman 1': -50, 'Early Roman 2': 70,
             'Middle Roman': 135, 'Late Roman': 250, 'Byzantine': 350, 'Islamic': 650}
