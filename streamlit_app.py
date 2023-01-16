@@ -48,11 +48,8 @@ for i, r in data.iterrows():
     x = data.loc[i, 'x']
     y = data.loc[i, 'y']
     latitude, longitude = Get_Lat_Long(x, y)
-    data.loc[i, 'longitude'] = longitude + israel_long_fudge
-    data.loc[i, 'latitude'] = latitude + israel_lat_fudge
-
-data.rename(columns={'lat': 'old_lat', 'long': 'old_long'}, inplace=True)
-data.rename(columns={'latitude': 'lat', 'longitude': 'long'}, inplace=True)
+    data.loc[i, 'long'] = longitude + israel_long_fudge
+    data.loc[i, 'lat'] = latitude + israel_lat_fudge
 
 # get user inputs
 undated = st.sidebar.radio('Include undated mikvot?', ['No', 'Yes'])
