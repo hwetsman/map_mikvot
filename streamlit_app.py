@@ -24,19 +24,17 @@ israel_long_fudge = .52
 israel_lat_fudge = 4.51
 
 # get data
-new_data = pd.read_csv('new_map_data.csv')
-new_data.rename(columns={'Map Ref. Point (Long.)': 'long',
-                'Map Ref. Point (Lat.)': 'lat',
-                         'No.': 'num'}, inplace=True)
+data = pd.read_csv('new_map_data.csv')
+data.rename(columns={'Map Ref. Point (Long.)': 'long',
+                     'Map Ref. Point (Lat.)': 'lat',
+                     'No.': 'num'}, inplace=True)
 
-
+# create sidebar instructions
 st.sidebar.write('Instructions for using this site:')
 instructions = """\nFrom this sidebar, choose the level of zoom, the era to map, and whether or not you would like to include undated mikvot."""
 st.sidebar.write(instructions)
-# url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv'
-data = pd.read_csv('map_data.csv')
-data = new_data.copy()
-# st.write(data)
+
+
 data['longitude'] = data.long*100
 data['latitude'] = data.lat*100
 data.drop(['long', 'lat'], inplace=True, axis=1)
