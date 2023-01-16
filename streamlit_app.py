@@ -56,8 +56,13 @@ for i, r in data.iterrows():
     data.loc[i, 'lat'] = latitude + israel_lat_fudge
 
 undated_df = data[data['Period'].isnull()]
-# st.write(undated_df.shape)
-# data = data[data['year'] <= year]
+
+col2.write("""A mikveh (Hebrew plural: mikvot) is a Jewish ritual bath used
+to restore spiritual purification. Mikvot are stepped immersion pools and quite
+common in the archeological record of ancient Judea. In the ancient Near East, mikvot
+ are only found at sites occupied by Judeans. As such pools are not costless to
+ build and maintain, the question arises of where and when did Judeans begin to
+ feel the need expend resources in order to follow biblical commandments on ritual purity.""")
 if era == 'Byzantine':
     df = data[data['Byz'] == 1]
     col2.title('The Byzantine Period')
