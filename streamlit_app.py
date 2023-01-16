@@ -43,12 +43,19 @@ era_dict = {'Persian': -540, 'Hellenistic': -330, 'Early Roman 1': -50, 'Early R
 # crs = CRS.from_epsg(6991)
 # crs.to_epsg()
 # crs = CRS.from_proj4("+proj=tmerc +lat_0=31.7343936111111 +lon_0=35.2045169444445 +k=1.0000067 +x_0=219529.584 +y_0=626907.39 +ellps=GRS80 +towgs84=-24.002400,-17.103200,-17.844400,-0.33007,-1.852690,1.669690,5.424800 +units=m +no_defs")
+def Get_Lat_Long(x, y):
+    lat, long = transformer.transform(x, y)
+    return lat, long
+
 
 transformer = Transformer.from_crs("EPSG:6991", "EPSG:4326")
 for i, r in data.iterrows():
-    long = data.loc[i, 'long']
-    lat = data.loc[i, 'lat']
-    latitude, longitude = transformer.transform(long, lat)
+    # long = data.loc[i, 'long']
+    x = data.loc[i, 'long']
+    # lat = data.loc[i, 'lat']
+    y = data.loc[i, 'lat']
+    # latitude, longitude = transformer.transform(long, lat)
+    latitude, longitude = Get_Lat_Long(x, y)
     data.loc[i, 'longitude'] = longitude+.52
     data.loc[i, 'latitude'] = latitude+4.51
     # st.write(transformer.transform(220080, 634451))
