@@ -23,6 +23,10 @@ transformer = Transformer.from_crs("EPSG:6991", "EPSG:4326")
 israel_long_fudge = .52
 israel_lat_fudge = 4.51
 
+# create era dict
+era_dict = {'Persian': -540, 'Hellenistic': -330, 'Early Roman 1': -50, 'Early Roman 2': 70,
+            'Middle Roman': 135, 'Late Roman': 250, 'Byzantine': 350, 'Islamic': 650}
+
 # get data
 data = pd.read_csv('new_map_data.csv')
 data.rename(columns={'Map Ref. Point (Long.)': 'x',
@@ -34,14 +38,14 @@ data['Persian'] = 0
 st.sidebar.write('Instructions for using this site:')
 instructions = """\nFrom this sidebar, choose the level of zoom, the era to map, and whether or not you would like to include undated mikvot."""
 st.sidebar.write(instructions)
+undated = st.sidebar.radio('Include undated mikvot?', ['No', 'Yes'])
+zlevel = st.sidebar.slider('Choose level of zoom', min_value=0, max_value=10, value=8)
+era = st.sidebar.select_slider('Choose an Era', list(era_dict.keys()))
+st.sidebar.write('\nData from Dr Yonatan Adler, Ariel University, Israel')
 
 # create good OIG coordinates
 data['x'] = data.x*100
 data['y'] = data.y*100
-
-# create era dict
-era_dict = {'Persian': -540, 'Hellenistic': -330, 'Early Roman 1': -50, 'Early Roman 2': 70,
-            'Middle Roman': 135, 'Late Roman': 250, 'Byzantine': 350, 'Islamic': 650}
 
 # iterate data to transform to lat/long
 for i, r in data.iterrows():
@@ -50,13 +54,6 @@ for i, r in data.iterrows():
     latitude, longitude = Get_Lat_Long(x, y)
     data.loc[i, 'long'] = longitude + israel_long_fudge
     data.loc[i, 'lat'] = latitude + israel_lat_fudge
-
-# get user inputs
-undated = st.sidebar.radio('Include undated mikvot?', ['No', 'Yes'])
-zlevel = st.sidebar.slider('Choose level of zoom', min_value=0, max_value=10, value=8)
-era = st.sidebar.select_slider('Choose an Era', list(era_dict.keys()))
-st.sidebar.write('\nData from Dr Yonatan Adler, Ariel University, Israel')
-# col1.title(era)
 
 undated_df = data[data['Period'].isnull()]
 # st.write(undated_df.shape)
