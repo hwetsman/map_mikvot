@@ -18,9 +18,11 @@ def Get_Lat_Long(x, y):
 st.set_page_config(layout="wide")
 col1, col2 = st.columns(2)
 
-# set israel grid to lat/long fudge factors
+# set israel grid to lat/long fudge factors and Transformer settings
+transformer = Transformer.from_crs("EPSG:6991", "EPSG:4326")
 israel_long_fudge = .52
 israel_lat_fudge = 4.51
+
 
 new_data = pd.read_csv('new_map_data.csv')
 new_era_dict = {'P': -540, 'Hel': -330, 'ER I': -50, 'ER II': 70,
@@ -49,12 +51,6 @@ era_dict = {'Persian': -540, 'Hellenistic': -330, 'Early Roman 1': -50, 'Early R
             'Middle Roman': 135, 'Late Roman': 250, 'Byzantine': 350, 'Islamic': 650}
 
 
-# crs = CRS.from_epsg(6991)
-# crs.to_epsg()
-# crs = CRS.from_proj4("+proj=tmerc +lat_0=31.7343936111111 +lon_0=35.2045169444445 +k=1.0000067 +x_0=219529.584 +y_0=626907.39 +ellps=GRS80 +towgs84=-24.002400,-17.103200,-17.844400,-0.33007,-1.852690,1.669690,5.424800 +units=m +no_defs")
-
-
-transformer = Transformer.from_crs("EPSG:6991", "EPSG:4326")
 for i, r in data.iterrows():
     x = data.loc[i, 'long']
     y = data.loc[i, 'lat']
