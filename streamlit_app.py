@@ -25,8 +25,8 @@ israel_lat_fudge = 4.51
 
 # get data
 data = pd.read_csv('new_map_data.csv')
-data.rename(columns={'Map Ref. Point (Long.)': 'long',
-                     'Map Ref. Point (Lat.)': 'lat',
+data.rename(columns={'Map Ref. Point (Long.)': 'x',
+                     'Map Ref. Point (Lat.)': 'y',
                      'No.': 'num'}, inplace=True)
 data['Persian'] = 0
 
@@ -36,28 +36,24 @@ instructions = """\nFrom this sidebar, choose the level of zoom, the era to map,
 st.sidebar.write(instructions)
 
 # create good OIG coordinates
-data['longitude'] = data.long*100
-data['latitude'] = data.lat*100
-data.drop(['long', 'lat'], inplace=True, axis=1)
-data.rename(columns={'latitude': 'lat', 'longitude': 'long'}, inplace=True)
+data['x'] = data.x*100
+data['y'] = data.y*100
 
-# st.write(data.head())
+# create era dict
 era_dict = {'Persian': -540, 'Hellenistic': -330, 'Early Roman 1': -50, 'Early Roman 2': 70,
             'Middle Roman': 135, 'Late Roman': 250, 'Byzantine': 350, 'Islamic': 650}
 
-
+# iterate data to transform to lat/long
 for i, r in data.iterrows():
-    x = data.loc[i, 'long']
-    y = data.loc[i, 'lat']
+    x = data.loc[i, 'x']
+    y = data.loc[i, 'y']
     latitude, longitude = Get_Lat_Long(x, y)
     data.loc[i, 'longitude'] = longitude + israel_long_fudge
     data.loc[i, 'latitude'] = latitude + israel_lat_fudge
 
 data.rename(columns={'lat': 'old_lat', 'long': 'old_long'}, inplace=True)
 data.rename(columns={'latitude': 'lat', 'longitude': 'long'}, inplace=True)
-# st.write(data)
 
-# lines = data.shape[0]
 # get user inputs
 undated = st.sidebar.radio('Include undated mikvot?', ['No', 'Yes'])
 zlevel = st.sidebar.slider('Choose level of zoom', min_value=0, max_value=10, value=8)
