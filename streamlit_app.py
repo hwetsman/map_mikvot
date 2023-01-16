@@ -38,6 +38,8 @@ data['Persian'] = 0
 st.sidebar.write('Instructions for using this site:')
 instructions = """\nFrom this sidebar, choose the level of zoom, the era to map, and whether or not you would like to include undated mikvot."""
 st.sidebar.write(instructions)
+tile = st.sidebar.selectbox('Choose a map tile', ['OpenStreetMap', 'Stamen Terrain', 'Stamen Toner', 'Stamen Watercolor', 'Cartodb Positron',
+                                                  'Cartodb dark_matter'], index=4)
 undated = st.sidebar.radio('Include undated mikvot?', ['No', 'Yes'])
 zlevel = st.sidebar.slider('Choose level of zoom', min_value=0, max_value=10, value=8)
 era = st.sidebar.select_slider('Choose an Era', list(era_dict.keys()))
@@ -100,17 +102,17 @@ else:
     col2.title('The Islamic Period')
     col2.write('\nThe Islamic period is after year 650 of the common era.')
 
-# else:
-#     df = data.copy()
 if undated == 'Yes':
     df = df.append(undated_df)
-# st.write(df.shape)
 
+# create folium map
+# m = folium.Map(location=[31.7857, 35.2007], zoom_start=zlevel,
+#                tiles='cartodb positron')
 
 m = folium.Map(location=[31.7857, 35.2007], zoom_start=zlevel,
-               tiles='cartodb positron')  # tiles='Stamen Watercolor')
+               tiles=tile)
 
-# Add a marker to the map
+# Add markers to the map
 for i, r in df.iterrows():
     lat = df.loc[i, 'lat']
     long = df.loc[i, 'long']
