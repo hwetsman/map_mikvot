@@ -2,11 +2,13 @@
 
 from pyproj import Transformer
 from pyproj import CRS
+from pyproj import Proj
 import pyproj
 import pandas as pd
 import streamlit as st
 import folium
 from streamlit_folium import st_folium
+import math
 
 
 def Get_Lat_Long(x, y, israel_lat_fudge, isreal_long_fudge):
@@ -21,17 +23,16 @@ st.set_page_config(layout="wide")
 col1, col2 = st.columns(2)
 
 # set israel grid to lat/long fudge factors and Transformer settings
-transformer = Transformer.from_crs("EPSG:6991", "EPSG:4326")
+transformer = Transformer.from_crs(6991, 4326)
+# 6984 IG 05, #6991 IG 05/12, 2039 I 1993, 28193 Palestine 1923
 israel_long_fudge = .5185
 israel_lat_fudge = 4.514
-# israel_long_fudge = 0
-# israel_lat_fudge = 0
 
 # create era dict
 era_dict = {'Persian': {'start_year': -540,
                         'col': 'Persian',
                         'title': 'The Persian Period',
-                        'text': '\nThe Persian period dates from about year 540 to year 100 before the common era. There are no mikvot dated to this period.'},
+                        'text': '\nThe Persian period dates from about year 540 to year 100 before the common era.'},
             'Hellenistic': {'start_year': -330,
                             'col': 'Hel',
                             'title': 'The Hellenistic Period',
@@ -80,9 +81,10 @@ zlevel = st.sidebar.slider('Choose level of zoom', min_value=0, max_value=10, va
 era = st.sidebar.select_slider('Choose an Era', list(era_dict.keys()))
 st.sidebar.write('\nData from Dr Yonatan Adler, Ariel University, Israel')
 
+# set map
 m = folium.Map(location=[31.77555556, 35.23527778], zoom_start=zlevel,
                tiles=tile)
-
+# st.write(data)
 # create good OIG coordinates
 data['x'] = data.x*100
 data['y'] = data.y*100
@@ -107,44 +109,55 @@ feel the need expend resources in order to follow biblical commandments on ritua
 # trim df to user choices
 dict = era_dict[era]
 df = data[data[dict['col']] == 1]
-col2.title(dict['title'])
+title = dict['title']
+col2.title(title)
 col2.write(dict['text'])
+dated_n = df.shape[0]
+col2.write(f'There are {dated_n} sites dated to {title}.')
 if undated == 'Yes':
     df = df.append(undated_df)
 
-
-# for e in era_dict.keys():
-#     for a in ['Yes', 'No']:
-#         dict = era_dict[e]
-#         df = data[data[dict['col']] == 1]
-#         col2.title(dict['title'])
-#         col2.write(dict['text'])
-#         if a == 'Yes':
-#             df = df.append(undated_df)
-
-
 # if Ein Sarah is at 31.5419444 35.09600000 and at 132100 170700 then what are the fudge factors
 # if ein gedi is 31.46 35.39 and at 187200 96600
-def Get_fudge(x, y):
-    lat, long = transformer.transform(x, y)
-    lat = lat + israel_lat_fudge
-    long = long + israel_long_fudge
-    return lat, long
+# def Get_fudge(x, y):
+#     lat, long = transformer.transform(x, y)
+#     lat = lat + israel_lat_fudge
+#     long = long + israel_long_fudge
+#     return lat, long
 
 
-lat, long = Get_fudge(187200, 96600)
+# lat, long = Get_fudge(187200, 96600)
 # st.write(lat-31.46)
 # st.write(35.39-long)
-
 # Add markers to the map
 for i, r in df.iterrows():
     lat = df.loc[i, 'lat']
     long = df.loc[i, 'long']
     name = df.loc[i, 'num']
     marker = folium.CircleMarker(
-        location=[lat, long], popup=name, tooltip=f'{name} Lat:{lat} Long:{long}', color='red', radius=1).add_to(m)
+        location=[lat, long], popup=name, tooltip=f'{name} \nLat:{lat} \nLong:{long}', color='red', radius=1).add_to(m)
+# add Western Wall
 marker = folium.CircleMarker(location=[31.7767, 35.2345],
                              tooltip='western wall', color='blue', radius=1).add_to(m)
+# transformer1 = Transformer.from_crs(4326, 6991)
+# ix, iy = transformer1.transform(31.7767, 35.2345)
+# st.write(ix, iy)
+# st.write(transformer.transform(ix, iy))
+#
+# # Create a projection object for the Old Israeli Grid (ITM)
+# transformer = Transformer.from_proj(6991, 4326)
+
+# Convert ITM coordinates(x, y) to latitude and longitude(lat, long)
+x = 185000
+y = 97500
+lat, long = transformer.transform(x, y)
+
+print("Latitude: ", lat)
+print("Longitude: ", long)
+
+
+marker = folium.CircleMarker(
+    location=[lat+israel_lat_fudge, long+israel_long_fudge], color='green', radius=5).add_to(m)
 # m.save(outfile=f'{e}_{a}_map.html')
 # display map
 with col1:
