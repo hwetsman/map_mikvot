@@ -22,8 +22,10 @@ col1, col2 = st.columns(2)
 
 # set israel grid to lat/long fudge factors and Transformer settings
 transformer = Transformer.from_crs("EPSG:6991", "EPSG:4326")
-israel_long_fudge = .52
-israel_lat_fudge = 4.51
+israel_long_fudge = .5185
+israel_lat_fudge = 4.514
+# israel_long_fudge = 0
+# israel_lat_fudge = 0
 
 # create era dict
 era_dict = {'Persian': {'start_year': -540,
@@ -78,7 +80,7 @@ zlevel = st.sidebar.slider('Choose level of zoom', min_value=0, max_value=10, va
 era = st.sidebar.select_slider('Choose an Era', list(era_dict.keys()))
 st.sidebar.write('\nData from Dr Yonatan Adler, Ariel University, Israel')
 
-m = folium.Map(location=[31.7857, 35.2007], zoom_start=zlevel,
+m = folium.Map(location=[31.77555556, 35.23527778], zoom_start=zlevel,
                tiles=tile)
 
 # create good OIG coordinates
@@ -120,6 +122,20 @@ if undated == 'Yes':
 #         if a == 'Yes':
 #             df = df.append(undated_df)
 
+
+# if Ein Sarah is at 31.5419444 35.09600000 and at 132100 170700 then what are the fudge factors
+# if ein gedi is 31.46 35.39 and at 187200 96600
+def Get_fudge(x, y):
+    lat, long = transformer.transform(x, y)
+    lat = lat + israel_lat_fudge
+    long = long + israel_long_fudge
+    return lat, long
+
+
+lat, long = Get_fudge(187200, 96600)
+st.write(lat-31.46)
+st.write(35.39-long)
+
 # Add markers to the map
 for i, r in df.iterrows():
     lat = df.loc[i, 'lat']
@@ -127,7 +143,8 @@ for i, r in df.iterrows():
     name = df.loc[i, 'num']
     marker = folium.CircleMarker(
         location=[lat, long], popup=name, tooltip=f'{name} Lat:{lat} Long:{long}', color='red', radius=1).add_to(m)
-
+marker = folium.CircleMarker(location=[31.77555556, 35.23527778],
+                             tooltip='western wall', color='blue', radius=1).add_to(m)
 # m.save(outfile=f'{e}_{a}_map.html')
 # display map
 with col1:
