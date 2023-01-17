@@ -24,8 +24,39 @@ israel_long_fudge = .52
 israel_lat_fudge = 4.51
 
 # create era dict
-era_dict = {'Persian': -540, 'Hellenistic': -330, 'Early Roman 1': -50, 'Early Roman 2': 70,
-            'Middle Roman': 135, 'Late Roman': 250, 'Byzantine': 350, 'Islamic': 650}
+era_dict = {'Persian': {'start_year': -540,
+                        'col': 'Persian',
+                        'title': 'The Persian Period',
+                        'text': '\nThe Persian period dates from about year 540 to year 100 before the common era. There are no mikvot dated to this period.'},
+            'Hellenistic': {'start_year': -330,
+                            'col': 'Hel',
+                            'title': 'The Hellenistic Period',
+                            'text': '\nThe Hellenistic period dates from years 100 to 50 before the common era.'},
+            'Early Roman 1': {'start_year': -50,
+                              'col': 'ER I',
+                              'title': 'The Early Roman Period 1',
+                              'text': '\nThe first half of the Early Roman period dates from 50 years befor the common era to the destruction of the Temple in the year 70 of the common era.'},
+            'Early Roman 2': {'start_year': 70,
+                              'col': 'ER II',
+                              'title': 'The Early Roman Period 2',
+                              'text': '\nThe second half of the Early Roman period dates from destruction of the Temple in year 70 to year 135 of the common era.'},
+            'Middle Roman': {'start_year': 135,
+                             'col': 'MR',
+                             'title': 'The Middle Roman Period',
+                             'text': '\nThe Middle Roman period dates from years 135 to 250 of the common era.'},
+            'Late Roman': {'start_year': 250,
+                           'col': 'LR',
+                           'title': 'The Late Roman Period',
+                           'text': '\nThe Late Roman period dates from years 250 to 350 of the common era.'},
+            'Byzantine': {'start_year': 350,
+                          'col': 'Byz',
+                          'title': 'The Byzantine Period',
+                          'text': '\nThe Byzantine period dates from years 350 to 650 of the common era.'},
+            'Islamic': {'start_year': 650,
+                        'col': 'Islm',
+                        'title': 'The Islamic Period',
+                        'text': '\nThe Islamic period is after year 650 of the common era.'}
+            }
 
 # get data
 data = pd.read_csv('new_map_data.csv')
@@ -65,43 +96,12 @@ common in the archeological record of ancient Judea. In the ancient Near East, m
  are only found at sites occupied by Judeans. As such pools are not costless to
  build and maintain, the question arises of where and when did Judeans begin to
  feel the need expend resources in order to follow biblical commandments on ritual purity.""")
-if era == 'Byzantine':
-    df = data[data['Byz'] == 1]
-    col2.title('The Byzantine Period')
-    col2.write('\nThe Byzantine period dates from years 350 to 650 of the common era.')
-    # st.write(df.shape)
-elif era == 'Late Roman':
-    df = data[data['LR'] == 1]
-    col2.title('The Late Roman Period')
-    col2.write('\nThe Late Roman period dates from years 250 to 350 of the common era.')
-    # st.write(df.shape)
-elif era == 'Middle Roman':
-    df = data[data['MR'] == 1]
-    col2.title('The Middle Roman Period')
-    col2.write('\nThe Middle Roman period dates from years 135 to 250 of the common era.')
-    # st.write(df.shape)
-elif era == 'Early Roman 2':
-    df = data[data['ER II'] == 1]
-    col2.title('The Early Roman Period 2')
-    col2.write('\nThe second half of the Early Roman period dates from destruction of the Temple in year 70 to year 135 of the common era.')
-    # st.write(df.shape)
-elif era == 'Early Roman 1':
-    df = data[data['ER I'] == 1]
-    col2.title('The Early Roman Period 1')
-    col2.write('\nThe first half of the Early Roman period dates from 50 years befor the common era to the destruction of the Temple in the year 70 of the common era.')
-elif era == 'Hellenistic':
-    col2.title('The Hellenistic Period')
-    df = data[data['Hel'] == 1]
-    col2.write('\nThe Hellenistic period dates from years 100 to 50 before the common era.')
-elif era == 'Persian':
-    col2.title('The Persian Period')
-    df = data[data['Persian'] == 1]
-    col2.write('\nThe Persian period dates from about year 540 to year 100 before the common era. There are no mikvot dated to this period.')
-else:
-    df = data[data['Islm'] == 1]
-    col2.title('The Islamic Period')
-    col2.write('\nThe Islamic period is after year 650 of the common era.')
 
+# trim df to user choices
+dict = era_dict[era]
+df = data[data[dict['col']] == 1]
+col2.title(dict['title'])
+col2.write(dict['text'])
 if undated == 'Yes':
     df = df.append(undated_df)
 
