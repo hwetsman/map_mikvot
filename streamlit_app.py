@@ -9,8 +9,10 @@ import folium
 from streamlit_folium import st_folium
 
 
-def Get_Lat_Long(x, y):
+def Get_Lat_Long(x, y, israel_lat_fudge, isreal_long_fudge):
     lat, long = transformer.transform(x, y)
+    lat = lat + israel_lat_fudge
+    long = long + israel_long_fudge
     return lat, long
 
 
@@ -84,18 +86,18 @@ data['y'] = data.y*100
 for i, r in data.iterrows():
     x = data.loc[i, 'x']
     y = data.loc[i, 'y']
-    latitude, longitude = Get_Lat_Long(x, y)
-    data.loc[i, 'long'] = longitude + israel_long_fudge
-    data.loc[i, 'lat'] = latitude + israel_lat_fudge
+    latitude, longitude = Get_Lat_Long(x, y, israel_lat_fudge, israel_long_fudge)
+    data.loc[i, 'long'] = longitude
+    data.loc[i, 'lat'] = latitude
 
 undated_df = data[data['Period'].isnull()]
 
 col2.write("""A mikveh (Hebrew plural: mikvot) is a Jewish ritual bath used
 to restore spiritual purification. Mikvot are stepped immersion pools and quite
 common in the archeological record of ancient Judea. In the ancient Near East, mikvot
- are only found at sites occupied by Judeans. As such pools are not costless to
- build and maintain, the question arises of where and when did Judeans begin to
- feel the need expend resources in order to follow biblical commandments on ritual purity.""")
+are only found at sites occupied by Judeans. As such pools are not costless to
+build and maintain, the question arises of where and when did Judeans begin to
+feel the need expend resources in order to follow biblical commandments on ritual purity.""")
 
 # trim df to user choices
 dict = era_dict[era]
