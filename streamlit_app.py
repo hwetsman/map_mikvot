@@ -133,8 +133,8 @@ def Get_fudge(x, y):
 
 
 lat, long = Get_fudge(187200, 96600)
-st.write(lat-31.46)
-st.write(35.39-long)
+# st.write(lat-31.46)
+# st.write(35.39-long)
 
 # Add markers to the map
 for i, r in df.iterrows():
