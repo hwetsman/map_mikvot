@@ -143,7 +143,7 @@ for i, r in df.iterrows():
     name = df.loc[i, 'num']
     marker = folium.CircleMarker(
         location=[lat, long], popup=name, tooltip=f'{name} Lat:{lat} Long:{long}', color='red', radius=1).add_to(m)
-marker = folium.CircleMarker(location=[31.77555556, 35.23527778],
+marker = folium.CircleMarker(location=[31.7767, 35.2345],
                              tooltip='western wall', color='blue', radius=1).add_to(m)
 # m.save(outfile=f'{e}_{a}_map.html')
 # display map
