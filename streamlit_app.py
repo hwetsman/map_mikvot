@@ -78,6 +78,9 @@ zlevel = st.sidebar.slider('Choose level of zoom', min_value=0, max_value=10, va
 era = st.sidebar.select_slider('Choose an Era', list(era_dict.keys()))
 st.sidebar.write('\nData from Dr Yonatan Adler, Ariel University, Israel')
 
+m = folium.Map(location=[31.7857, 35.2007], zoom_start=zlevel,
+               tiles=tile)
+
 # create good OIG coordinates
 data['x'] = data.x*100
 data['y'] = data.y*100
@@ -107,16 +110,25 @@ col2.write(dict['text'])
 if undated == 'Yes':
     df = df.append(undated_df)
 
-m = folium.Map(location=[31.7857, 35.2007], zoom_start=zlevel,
-               tiles=tile)
+
+# for e in era_dict.keys():
+#     for a in ['Yes', 'No']:
+#         dict = era_dict[e]
+#         df = data[data[dict['col']] == 1]
+#         col2.title(dict['title'])
+#         col2.write(dict['text'])
+#         if a == 'Yes':
+#             df = df.append(undated_df)
 
 # Add markers to the map
 for i, r in df.iterrows():
     lat = df.loc[i, 'lat']
     long = df.loc[i, 'long']
     name = df.loc[i, 'num']
-    marker = folium.CircleMarker(location=[lat, long], popup=name, color='red', radius=1).add_to(m)
+    marker = folium.CircleMarker(
+        location=[lat, long], popup=name, tooltip=f'{name} Lat:{lat} Long:{long}', color='red', radius=1).add_to(m)
 
+# m.save(outfile=f'{e}_{a}_map.html')
 # display map
 with col1:
     st_data = st_folium(m)
