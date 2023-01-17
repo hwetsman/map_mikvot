@@ -156,8 +156,8 @@ print("Latitude: ", lat)
 print("Longitude: ", long)
 
 
-marker = folium.CircleMarker(
-    location=[lat+israel_lat_fudge, long+israel_long_fudge], color='green', radius=5).add_to(m)
+# marker = folium.CircleMarker(
+#     location=[lat+israel_lat_fudge, long+israel_long_fudge], color='green', radius=5).add_to(m)
 # m.save(outfile=f'{e}_{a}_map.html')
 # display map
 with col1:
